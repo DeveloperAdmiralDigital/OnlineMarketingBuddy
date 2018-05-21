@@ -1,0 +1,106 @@
+.containerCss {
+    margin: 0;
+}
+
+#whiteBox {
+    border-radius: 5px;
+    background-color: rgba(245, 245, 245, 0.95);
+    padding: 4%;
+    box-shadow: 5px 5px 40px black;
+}
+
+.fixed-action-btn {
+    float: right;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    margin-right: 20px;
+}
+
+
+.redbg {
+    background-color: #000000;
+}
+
+.marginator{
+    margin-right:20px;
+}
+
+.minimargin{
+    margin-left:10px;
+}
+
+.paddingnator{
+    padding: 20px;
+}
+
+
+.emification{
+    font-size: 0.9em;
+}
+
+img:before {
+    content: "";
+    display: block;
+
+    position: absolute;
+    left: 0;
+    height: calc(100% + 10px);
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    border: 2px #37474F;
+}
+
+img:after {
+    content: "Image not found!";
+    display: block;
+    font-size: 16px;
+    font-style: normal;
+    color: #37474F;
+    position: absolute;
+    top: 5px;
+    padding: 5px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.brand-logo {
+    margin-left: 30px;
+}
+
+.logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+
+}
+
+/* label color */
+.input-field label {
+    color: #546e7a;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label {
+    color: #546e7a;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #546e7a;
+    box-shadow: 0 1px 0 0 #546e7a;
+}
+/* valid color */
+.input-field input[type=text].valid {
+    border-bottom: 1px solid #546e7a;
+    box-shadow: 0 1px 0 0 #546e7a;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+    border-bottom: 1px solid #546e7a;
+    box-shadow: 0 1px 0 0 #546e7a;
+}
+/* icon prefix focus color */
+.input-field .prefix.active {
+    color: #546e7a;
+}
