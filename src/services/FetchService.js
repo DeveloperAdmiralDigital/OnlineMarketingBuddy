@@ -1,4 +1,4 @@
-const URL = 'http://localhost:8080/api/';
+const URL = 'http://67.209.127.225:8181/api/';
 
 export function fetchWithHeader(api = "", method = 'GET', body = {}, error = {}) {
     let userToken = JSON.parse(localStorage.getItem('userToken'));
@@ -13,8 +13,6 @@ export function fetchWithHeader(api = "", method = 'GET', body = {}, error = {})
             // 'Authorization': userToken.token_type + " " + userToken.access_token,
         }
     }
-    console.log("fetch: ", body);
-    console.log( "url",URL + api );
         return fetch(URL + api,
             {
                 mode: 'cors',
@@ -28,7 +26,7 @@ export function fetchWithHeader(api = "", method = 'GET', body = {}, error = {})
                 return responseJson;
             })
             .catch((err) => {
-                console.log("geen response");
+                console.log("no response");
                 return error;
             });
     return {};

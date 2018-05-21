@@ -68,13 +68,16 @@ export default class AddGraph extends Component {
             graphType: this.state.fields["graphType"],
             childrenProps: {
                 yAxisProps: [
-                    {hide: false}
+                    {
+                        hide: false,
+                        dataKey: this.state.fields["dataKey"],
+                    }
                 ]
             },
-            drawProps: {
+            drawProps: [{
                 dataKey: this.state.fields["dataKey"],
                 stroke: this.state.fields["stroke"]
-            }
+            }]
 
         };
         if (this.state.brush) {
@@ -86,13 +89,16 @@ export default class AddGraph extends Component {
                 }
             }
         }
+
         if (this.state.fields["graphType"] === "composed") {
+            console.log("composed graph");
             if (!this.state.fields["lineStroke"].includes("#")) {
                 this.state.fields["lineStroke"] = "#" + this.state.fields["lineStroke"];
             }
             if (!this.state.fields["barStroke"].includes("#")) {
                 this.state.fields["barStroke"] = "#" + this.state.fields["barStroke"];
             }
+
             output["yAxisprops"] = [
                 {
                     yAxisId: "line",
@@ -122,6 +128,7 @@ export default class AddGraph extends Component {
                 }
 
             ];
+            console.log("output: ", output);
         }
 
         swal({
@@ -138,21 +145,27 @@ export default class AddGraph extends Component {
 
         NameService.getDetails(this.state.fields["advertisementId"], JSON.stringify(data))
             .then((data) => {
-                console.log("fetch data");
-                console.log(data);
-                this.state.fields["data"] = data;
-                GraphService.postGraph(JSON.stringify(output));
-            }).then(
-            swal({
-                position: 'top-end',
-                type: 'success',
-
-                title: 'Graph Added!!',
-
-                showConfirmButton: false,
-                timer: 1500
+                let analytics = data["analyticsAdvertisements"];
+                analytics.forEach((dat) => {
+                    dat["date"] = dat.adDate.dayOfMonth + "-" + dat.adDate.monthOfYear + "-" + dat.adDate.yearOfEra;
+                });
+                this.state.fields["data"] = analytics;
             })
-        ).then(this.props.history.push('/dashboard'));
+            .then(() => {
+                output.data = this.state.fields["data"];
+                GraphService.postGraph(output);
+            })
+            .then(
+                swal({
+                    position: 'top-end',
+                    type: 'success',
+
+                    title: 'Graph Added!!',
+
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            ).then(this.props.history.push('/dashboard'));
 
 
     };
@@ -201,6 +214,7 @@ export default class AddGraph extends Component {
                                                                  onChange={this.handleChange.bind(this, "graphTitle")}
                                                                  placeholder="Fill in a title for the graph..."
                                                                  label="GraphTitle *"/>
+{/* --------- //TODO: DropDown with graphtypes = ["line","area,"bar","composed"] ------------*/}
                                                 <StyledTextField ref="graphType" required
                                                                  onChange={this.handleChange.bind(this, "graphType")}
                                                                  placeholder="Fill in a type for the graph..."

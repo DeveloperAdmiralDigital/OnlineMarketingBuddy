@@ -81,7 +81,6 @@ export default class graphChart extends Component {
     }
 
     render() {
-
         return (
             <div className="graphChart">
                 <ResponsiveContainer width="80%" height="100%">

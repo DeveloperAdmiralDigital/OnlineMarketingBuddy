@@ -1,4 +1,5 @@
 import * as fetchService from "./FetchService";
+
 const BASE_URL = "advertisementNames/";
 
 
@@ -14,7 +15,7 @@ export function updateData(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "advertisementName/" + id, "PUT", data, {});
 }
 
-export function getAnalytics(id,data) {
+export function getAnalytics(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "analyticsCalculations/" + id, "POST", data, {value: "value not found"});
 }
 
@@ -22,11 +23,11 @@ export function getAllDetails(data) {
     return fetchService.fetchWithHeader(BASE_URL + "details/", "POST", data, {value: "value not found"});
 }
 
-export function getDetails(id,data) {
+export function getDetails(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "details/" + id, "POST", data, {value: "value not found"});
 }
 
-export function getFacebook(id,data) {
+export function getFacebook(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "facebookCalculations/" + id, "POST", data, {value: "value not found"});
 }
 

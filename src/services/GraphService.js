@@ -441,16 +441,25 @@ let COMPOSED = [
     ];
 
 export function postGraph(data) {
+    console.log("postgraph");
+    console.log(data);
+
     let input = data;
-    if("composed" === input.graphType.toLowerCase()){
-        input["graphId"] = COMPOSED.size();
-        input["syncId"] = COMPOSED.size() + GRAPHS.size();
+    if("composed" === input.graphType){
+        input["graphId"] = COMPOSED.length+1;
+        input["syncId"] = COMPOSED.length + GRAPHS.length+1;
+        console.log("if composed");
+        console.log(input);
         COMPOSED.push(input);
     } else {
-        input["graphId"] = GRAPHS.size();
-        input["syncId"] = COMPOSED.size() + GRAPHS.size();
+        input["graphId"] = GRAPHS.length+1;
+        input["syncId"] = COMPOSED.length + GRAPHS.length+1;
+        console.log("if not composed");
+        console.log(input);
         GRAPHS.push(input);
     }
+    console.log("composed: ", COMPOSED);
+    console.log("GRAPH: ", GRAPHS );
 }
 
 export function getGraphs() {
