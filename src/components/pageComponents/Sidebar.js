@@ -4,7 +4,7 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import logo from '../../images/admiral-digital-logo-white-medium.png'
-import * as LoginService from "../../services/LoginService";
+// import * as LoginService from "../../services/LoginService";
 // import * as roleService from "../../services/UserService";
 import './Sidebar.css';
 
@@ -30,8 +30,8 @@ export default class Sidebar extends Component {
     }
 
     CheckUserRoles() {
-        let self = this;
-        let roles = [];
+        // let self = this;
+        // let roles = [];
         if (localStorage.getItem("userToken") != null) {
             /*roleService.getRolesCurrentUser().then(
                 (value) => {

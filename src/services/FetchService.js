@@ -1,7 +1,7 @@
-const URL = 'https://67.209.127.225:8181/api/';
+const URL = 'http://67.209.127.225:8181/api/';
 
 export function fetchWithHeader(api = "", method = 'GET', body = {}, error = {}) {
-    let userToken = JSON.parse(localStorage.getItem('userToken'));
+    // let userToken = JSON.parse(localStorage.getItem('userToken'));
     let headers = {
         'Content-Type': 'application/json',
         // 'Authorization': userToken.token_type + " " + userToken.access_token,
@@ -29,5 +29,4 @@ export function fetchWithHeader(api = "", method = 'GET', body = {}, error = {})
                 console.log("no response");
                 return error;
             });
-    return {};
 }

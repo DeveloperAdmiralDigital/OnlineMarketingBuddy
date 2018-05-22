@@ -261,73 +261,6 @@ let GRAPHS = [
             fill: "#960000",
             stroke: "#900000"
         }]
-    },
-    {
-        graphId: 9,
-        graphTitle: "RadialBar",
-        graphType: "radialBar",
-        syncId: 2,
-        data: [
-            {date: "2018-02-11", costPerClick: 858},
-            {date: "2018-02-12", costPerClick: 765},
-            {date: "2018-02-13", costPerClick: 476},
-            {date: "2018-02-14", costPerClick: 397},
-            {date: "2018-02-15", costPerClick: 623},
-            {date: "2018-02-16", costPerClick: 584},
-            {date: "2018-02-17", costPerClick: 1111},
-            {date: "2018-02-18", costPerClick: 942},
-            {date: "2018-02-19", costPerClick: 239}
-        ],
-        drawProps: [{
-            innerRadius: 0,
-            outerRadius: "100%",
-            dataKey: "costPerClick",
-            nameKey: "date",
-            fill: "#960000",
-            stroke: "#900000"
-        }]
-    },
-    {
-        graphId: 10,
-        graphTitle: "Scatter",
-        graphType: "scatter",
-        syncId: 1,
-        data: [
-            {date: "2018-02-01", clicks: 2000, conversions: 1100},
-            {date: "2018-02-02", clicks: 2100, conversions: 1000},
-            {date: "2018-02-03", clicks: 1900, conversions: 700},
-            {date: "2018-02-04", clicks: 2200, conversions: 1300},
-            {date: "2018-02-05", clicks: 2000, conversions: 800},
-            {date: "2018-02-06", clicks: 1800, conversions: 1000},
-            {date: "2018-02-07", clicks: 2300, conversions: 1200},
-            {date: "2018-02-08", clicks: 1700, conversions: 900},
-            {date: "2018-02-09", clicks: 2000, conversions: 1100},
-            {date: "2018-02-10", clicks: 2100, conversions: 1000}
-        ],
-        childrenProps: {
-            yAxisProps: [{
-                hide: false
-            }],
-            brushProps: {
-                dataKey: "date",
-                stroke: "#960000",
-            }
-        },
-        drawProps: [
-            {
-                type: 'linear',
-                dataKey: "clicks",
-                dot: true,
-                stroke: "#960000",
-
-            },
-            {
-                type: 'linear',
-                dataKey: "conversions",
-                dot: true,
-                stroke: "#f60000"
-            }
-        ]
     }
 ];
 
@@ -464,12 +397,6 @@ export function postGraph(data) {
 
 export function getGraphs() {
     return GRAPHS;
-}
-
-export function getGraph(id) {
-    return GRAPHS.find((graph) => {
-        graph.graphId = id
-    });
 }
 
 export function deleteGraph(id) {

@@ -14,7 +14,7 @@ export function updateData(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "campaign/" + id, "PUT", data, {});
 }
 
-export function getNames(){
+export function getAllNames(){
     return fetchService.fetchWithHeader(BASE_URL + "campaignName/","GET",{},{value: "value not found"})
 }
 

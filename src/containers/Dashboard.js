@@ -68,7 +68,7 @@ export default class Dashboard extends Component {
                     'Graph was deleted.',
                     'success'
                 ).then(() => {
-                    this.getGraphs();
+                    self.getGraphs();
                 });
 
             } else if (

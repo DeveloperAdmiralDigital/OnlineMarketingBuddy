@@ -10,12 +10,20 @@ export function postData(data) {
     fetchService.fetchWithHeader(BASE_URL, "POST", data, {});
 }
 
+export function getAdName(id) {
+    return fetchService.fetchWithHeader(BASE_URL + "advertisementNames/" + id, "GET", {}, {value: "value not found"});
+}
+
 export function updateData(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "advertisementSet/" + id, "PUT", data, {});
 }
 
-export function getNames(){
+export function getAllNames(){
     return fetchService.fetchWithHeader(BASE_URL + "advertisementSetName/","GET",{},{value: "value not found"})
+}
+
+export function getNames(id){
+    return fetchService.fetchWithHeader(BASE_URL + "advertisementSetName/" + id,"GET",{},{value: "value not found"})
 }
 
 export function getAnalytics(id) {

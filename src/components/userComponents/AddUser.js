@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import {Row,Input} from 'react-materialize';
 import Header from '../generalComponents/Header'
 import StyledTextField from "../generalComponents/StyledTextField";
-import * as UserService from '../../services/UserService';
+// import * as UserService from '../../services/UserService';
 import './AddUser.css';
 
 export default class AddUser extends Component {

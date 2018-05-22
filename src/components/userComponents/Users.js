@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import swal from 'sweetalert2';
+// import swal from 'sweetalert2';
 import Header from '../generalComponents/Header';
-import * as UserService from '../../services/UserService';
+// import * as UserService from '../../services/UserService';
 import './Users.css';
 
 

@@ -1,8 +1,7 @@
-const AuthStr = 'Basic TXVzaWNNYWtlckFQSWNsaWVudGlkOlZjbWpQS0p6NjZBUzE=';
+// const AuthStr = 'Basic TXVzaWNNYWtlckFQSWNsaWVudGlkOlZjbWpQS0p6NjZBUzE=';
 
-//const URL = 'http://localhost:8080/oauth/token';
-
-const URL = 'https://musicmaker-api-team4.herokuapp.com/oauth/token';
+//const URL = 'http://localhost:8181/oauth/token';
+// const URL = 'https://67.209.127.225:8181/oauth/token';
 
 export function fetchToken(username, password) {
     return true;

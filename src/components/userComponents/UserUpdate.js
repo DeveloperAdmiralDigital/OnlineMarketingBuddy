@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import {Row, Input} from 'react-materialize';
 import Header from '../generalComponents/Header';
 import StyledTextField from "../generalComponents/StyledTextField";
-import * as UserService from '../../services/UserService';
+// import * as UserService from '../../services/UserService';
 import './UserUpdate.css';
 
 export default class UserUpdate extends Component {
@@ -52,7 +52,7 @@ export default class UserUpdate extends Component {
         }*/
 
     handleUpdate = () => {
-        let self = this;
+        // let self = this;
 
         swal({
             position: 'top-end',

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Icon} from "react-materialize";
 import GraphChart from "./GraphChart";
 import './GraphComponent.css'
 
