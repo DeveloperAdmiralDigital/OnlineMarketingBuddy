@@ -1,4 +1,4 @@
-const URL = 'http://67.209.127.225:8181/api/';
+const URL = 'https://67.209.127.225:8181/api/';
 
 export function fetchWithHeader(api = "", method = 'GET', body = {}, error = {}) {
     let userToken = JSON.parse(localStorage.getItem('userToken'));
