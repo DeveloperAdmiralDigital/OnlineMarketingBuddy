@@ -10,6 +10,10 @@ export function postData(data) {
     fetchService.fetchWithHeader(BASE_URL, "POST", data, {});
 }
 
+export function getAdSets(id) {
+    return fetchService.fetchWithHeader(BASE_URL + "AdvertisementSets/" + id, "GET", {}, {value: "value not found"});
+}
+
 export function updateData(id, data) {
     return fetchService.fetchWithHeader(BASE_URL + "campaign/" + id, "PUT", data, {});
 }
