@@ -41,7 +41,6 @@ export default class StyledDropDown extends Component {
         return (
             <div className="SSSFWrapper">
                 <SelectField
-                    name={this.props.id}
                     onChange={this.handleChange}
                     floatingLabelText={this.props.label}
                     value={this.state.value}

@@ -15,6 +15,7 @@ import StyledColorPicker from "../components/generalComponents/StyledColorPicker
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import 'react-select/dist/react-select.css';
+import MultiStyledSelectField from "../components/generalComponents/MultiStyledSelectField";
 
 const GRAPH_TYPES = [
     {value: "line", key: 1},
@@ -78,6 +79,7 @@ export default class AddGraph extends Component {
             selectedAd: "",
             analytics: false,
             facebook: false,
+            selected: {types: []}
         }
     }
 
@@ -136,6 +138,21 @@ export default class AddGraph extends Component {
         let fields = this.state.fields;
         fields[field] = date;
         this.setState({fields});
+    };
+
+    handleMultiSelect = (field, item) => {
+        /*        let selected = this.state.selected;
+                if(selected["types"].includes(item[0])){
+                    selected["types"].splice(selected["types"].indexOf(item[0]),1);
+                } else {
+                    selected["types"].push(item[0]);
+                }
+                this.setState({
+                    selected:selected
+                });
+                console.log("this.state.selected: ", this.state.selected)*/
+        console.log("item: ", item)
+
     };
 
     handleCampaignChange(value) {
@@ -210,7 +227,7 @@ export default class AddGraph extends Component {
                 stroke: fields["stroke"]
             };
         }
-        
+
         if (!output["complete"]) {
             swal({
                 position: 'center',
@@ -254,12 +271,12 @@ export default class AddGraph extends Component {
                         output.data = fields["data"];
                         GraphService.postGraph(output);
                         swal({
-                                position: 'top-end',
-                                type: 'success',
-                                title: 'Graph Added!!',
-                                showConfirmButton: false,
-                                timer: 2500
-                            }).then(this.props.history.push('/dashboard'));
+                            position: 'top-end',
+                            type: 'success',
+                            title: 'Graph Added!!',
+                            showConfirmButton: false,
+                            timer: 2500
+                        }).then(this.props.history.push('/dashboard'));
                     } else {
                         swal({
                             position: 'center',
@@ -350,7 +367,7 @@ export default class AddGraph extends Component {
         if (this.state.facebook) {
             if ("composed" !== this.state.fields["graphType"]) {
                 datakeys = <Row>
-                    <StyledDropDown id="dataKey" items={FB_TYPES} floatingLabelText="dataKey"
+                    <StyledDropDown items={FB_TYPES} floatingLabelText="dataKey"
                                     handleChange={this.handleDropChange.bind(this, "dataKey")}
                                     label="dataKey"/>
                 </Row>;
@@ -358,12 +375,12 @@ export default class AddGraph extends Component {
                 datakeys =
                     <Row>
                         <div className="col s12 m6 l6">
-                            <StyledDropDown id="lineDataKey" items={FB_TYPES} floatingLabelText="lineDataKey"
+                            <StyledDropDown items={FB_TYPES} floatingLabelText="lineDataKey"
                                             handleChange={this.handleDropChange.bind(this, "lineDataKey")}
                                             label="DataKey Line"/>
                         </div>
                         <div className="col s12 m6 l6">
-                            <StyledDropDown id="barDataKey" items={FB_TYPES} floatingLabelText="barDataKey"
+                            <StyledDropDown items={FB_TYPES} floatingLabelText="barDataKey"
                                             handleChange={this.handleDropChange.bind(this, "barDataKey")}
                                             label="DataKey bar"/>
                         </div>
@@ -373,7 +390,7 @@ export default class AddGraph extends Component {
         if (this.state.analytics) {
             if ("composed" !== this.state.fields["graphType"]) {
                 datakeys = <Row>
-                    <StyledDropDown id="dataKey" items={A_TYPES} floatingLabelText="dataKey"
+                    <StyledDropDown items={A_TYPES} floatingLabelText="dataKey"
                                     handleChange={this.handleDropChange.bind(this, "dataKey")}
                                     label="dataKey"/>
                 </Row>;
@@ -381,12 +398,12 @@ export default class AddGraph extends Component {
                 datakeys =
                     <Row>
                         <div className="col s12 m6 l6">
-                            <StyledDropDown id="lineDataKey" items={A_TYPES} floatingLabelText="lineDataKey"
+                            <StyledDropDown items={A_TYPES} floatingLabelText="lineDataKey"
                                             handleChange={this.handleDropChange.bind(this, "lineDataKey")}
                                             label="DataKey Line"/>
                         </div>
                         <div className="col s12 m6 l6">
-                            <StyledDropDown id="barDataKey" items={A_TYPES} floatingLabelText="barDataKey"
+                            <StyledDropDown items={A_TYPES} floatingLabelText="barDataKey"
                                             handleChange={this.handleDropChange.bind(this, "barDataKey")}
                                             label="DataKey bar"/>
                         </div>
@@ -468,6 +485,15 @@ export default class AddGraph extends Component {
                                         </div>
                                         <div className="col s12 m12 l12">
                                             {datakeys}
+                                        </div>
+                                        <div className="col s12 m12 l12">
+                                            <MultiStyledSelectField
+                                                label="MultiSelect"
+                                                fullWidth={true}
+                                                items={A_TYPES}
+                                                itemValues={this.state.selected["types"]}
+                                                onChangeitem={this.handleMultiSelect.bind(this, "types")}
+                                            />
                                         </div>
                                     </div>
                                     <div className="section">

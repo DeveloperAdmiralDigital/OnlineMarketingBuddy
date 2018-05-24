@@ -5,14 +5,17 @@ import MenuItem from 'material-ui/MenuItem';
 
 const styles = {
     color: {
-        color: "#E42320",
+        color: "#960000",
     },
     underlineStyle: {
-        borderColor: "#E42320",
+        borderColor: "#960000",
     },
 };
 
 export default class MultiStyledSelectField extends Component {
+    constructor(props){
+        super(props);
+    }
 
 
     itemsDialog = (values) => {
@@ -21,10 +24,17 @@ export default class MultiStyledSelectField extends Component {
                 key={item.key}
                 insetChildren={true}
                 checked={values && values.indexOf(item.key) > -1}
-                value={item.value}
+                value={item}
                 primaryText={item.value}
             />
         ));
+    };
+
+    onChangeitem = (event, index, value) => {
+        console.log("event: ", event);
+        console.log("index: ", index);
+        console.log("value: ", value);
+        this.props.onChangeitem(value);
     };
 
     render() {
@@ -35,10 +45,12 @@ export default class MultiStyledSelectField extends Component {
                     multiple={true}
                     value={this.props.itemValues}
                     hintText={this.props.hint}
-                    onChange={this.props.onChangeitem}
+                    onChange={this.onChangeitem}
+                    floatingLabelText={this.props.label}
                     selectedMenuItemStyle={styles.color}
                     floatingLabelFocusStyle={styles.color}
                     underlineFocusStyle={styles.underlineStyle}
+                    underlineStyle={styles.underlineStyle}
                 >
                     {this.itemsDialog(this.props.itemValues)}
                 </SelectField>
