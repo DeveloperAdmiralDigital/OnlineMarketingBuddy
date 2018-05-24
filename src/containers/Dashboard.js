@@ -5,7 +5,7 @@ import GraphComponent from "../components/dashboardComponents/GraphComponent";
 import * as GraphService from '../services/GraphService';
 import * as ExtraService from '../services/ExtraService';
 import './Dashboard.css';
-import Link from "react-router-dom/es/Link";
+import {Row} from "react-materialize";
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -83,6 +83,7 @@ export default class Dashboard extends Component {
             }
         })
     };
+
     handleComposedDelete = (id, e) => {
         swal({
             title: 'Are you sure?',
@@ -126,29 +127,31 @@ export default class Dashboard extends Component {
             <div className="Homepage">
                 <Header name="Dashboard"/>
                 <section className="containerCss">
-                    <div className="row">
+                    {/*                    <div className="row">
                         {this.state.extra.map((obj, index) => {
                             return <div key={`extra-${index}`} className="card-panel bordered col s4">
                                 <label>{obj.name}</label>
                                 <p>{obj.value}</p>
                             </div>
                         })}
-                    </div>
-                    <div className="row"> <Link to="/addGraph" type="button" className="btn waves-effect waves-light deep-orange darken-4 buttonstyle">Add Graph</Link></div>
-                    <div className="row">
+                    </div>*/}
+                    <Row>
                         {this.state.composedGraphs.map((graph, index) => {
                             return <GraphComponent key={`composedGraph-${index}`} {...graph}
                                                    handleDelete={this.handleComposedDelete}/>
                         })}
+                    </Row>
+                    <Row>
                         {this.state.graphs.map((graph, index) => {
                             return <GraphComponent key={`graph-${index}`} {...graph}
                                                    handleDelete={this.handleDelete}/>
                         })}
 
-                    </div>
+                    </Row>
                 </section>
             </div>
-        );
+        )
+            ;
 
     }
 }

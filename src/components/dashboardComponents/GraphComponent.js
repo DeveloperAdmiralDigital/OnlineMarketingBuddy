@@ -2,13 +2,10 @@ import React, {Component} from 'react';
 import GraphChart from "./GraphChart";
 import './GraphComponent.css'
 
-const CHART_HEIGHT = 200;
-const CHART_WIDTH = 400;
+const CHART_HEIGHT = 250;
+const CHART_WIDTH = 600;
 const CHART_LAYOUT = 'horizontal';
 const CHART_MARGIN = {top: 5, right: 10, left: 10, bottom: 10};
-
-const COMPOSED_HEIGHT = 250;
-const COMPOSED_WIDTH = 600;
 
 
 export default class graphComponent extends Component {
@@ -20,23 +17,12 @@ export default class graphComponent extends Component {
                 width: CHART_WIDTH,
                 height: CHART_HEIGHT,
                 margin: CHART_MARGIN
-            },
-            divName: "card-panel bordered centered col s12 m5 l4 col-lg-4 col-md-5 col-sm-11",
+            }
         };
     }
 
     componentDidMount() {
         this.setChartConfig();
-        if ('composed' === this.props.graphType) {
-            let chartConfig = this.state.chartConfig;
-            chartConfig.width = COMPOSED_WIDTH;
-            chartConfig.height = COMPOSED_HEIGHT;
-
-            this.setState({
-                chartConfig: chartConfig,
-                divName: "card-panel bordered centered col s12 m8 l6"
-            })
-        }
     }
 
     setChartConfig() {
@@ -80,9 +66,9 @@ export default class graphComponent extends Component {
 
     render() {
         return (
-            <div className={this.state.divName}>
-                <i className="material-icons" onClick={this.clickEdit} style={{cursor: "pointer"}} >create</i>
-                <i className="material-icons" onClick={this.handleDelete} style={{cursor: "pointer"}} >clear</i>
+            <div className="card-panel bordered centered col s12 m8 l6">
+                <i className="material-icons" onClick={this.clickEdit} style={{cursor: "pointer"}}>create</i>
+                <i className="material-icons" onClick={this.handleDelete} style={{cursor: "pointer"}}>clear</i>
                 <h3>{this.props.graphTitle}</h3>
 
                 <GraphChart chartConfig={this.state.chartConfig} {...this.props}/>
