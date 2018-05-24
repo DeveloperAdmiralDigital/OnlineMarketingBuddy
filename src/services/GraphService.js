@@ -1,4 +1,4 @@
-let GRAPHS = [
+/*let GRAPHS = [
     {
         graphId: 1,
         graphTitle: "LineChart 2 Linear",
@@ -371,7 +371,14 @@ let COMPOSED = [
             }
         ]
     }
-    ];
+    ];*/
+let COMPOSED = [], GRAPHS =[];
+if(localStorage.getItem("GRAPHS")!=null){
+    GRAPHS = JSON.parse(localStorage.getItem("GRAPHS"));
+}
+if(localStorage.getItem("COMPOSED")!=null){
+    COMPOSED = JSON.parse(localStorage.getItem("COMPOSED"));
+}
 
 export function postGraph(data) {
     console.log("postgraph");
@@ -384,12 +391,14 @@ export function postGraph(data) {
         console.log("if composed");
         console.log(input);
         COMPOSED.push(input);
+        localStorage.setItem("COMPOSED", JSON.stringify(COMPOSED))
     } else {
         input["graphId"] = GRAPHS.length+1;
         input["syncId"] = COMPOSED.length + GRAPHS.length+1;
         console.log("if not composed");
         console.log(input);
         GRAPHS.push(input);
+        localStorage.setItem("GRAPHS", JSON.stringify(GRAPHS))
     }
     console.log("composed: ", COMPOSED);
     console.log("GRAPH: ", GRAPHS );
@@ -407,6 +416,8 @@ export function deleteGraph(id) {
         }
     });
     GRAPHS = newGraphs;
+    localStorage.setItem("GRAPHS", JSON.stringify(GRAPHS))
+
 }
 
 export function getComposedGraphs() {
@@ -421,4 +432,6 @@ export function deleteComposedGraph(id) {
         }
     });
     COMPOSED = newGraphs;
+    localStorage.setItem("COMPOSED", JSON.stringify(COMPOSED))
+
 }

@@ -149,6 +149,8 @@ export default class AddGraph extends Component {
                     adSetsIn.push({key: adSet["advertisementSetId"], value: adSet["advertisementSetCode"]})
                 }
             });
+            console.log("adsets from campaign: ", value);
+            console.log("adveritsements: ", adSetsIn);
             this.setState({
                 selectedCampaign: value.value,
                 adSets: adSetsIn
@@ -171,6 +173,8 @@ export default class AddGraph extends Component {
                     adIn.push({key: ad["advertisementNameId"], value: ad["advertisementNameCode"]})
                 }
             });
+            console.log("adveritsements from adset: ", value);
+            console.log("adveritsements: ", adIn);
             this.setState({
                 selectedAdSet: value.value,
                 advertisements: adIn
@@ -200,6 +204,13 @@ export default class AddGraph extends Component {
         console.log("handleAdd: ", this.state);
         let fields = this.state.fields;
         let output = this.setOutput(fields);
+        if (this.state.brush) {
+            output.childrenProps["brushProps"] = {
+                dataKey: "date",
+                stroke: fields["stroke"]
+            };
+        }
+        
         if (!output["complete"]) {
             swal({
                 position: 'center',
@@ -538,13 +549,6 @@ export default class AddGraph extends Component {
             } else {
                 return {complete: false};
             }
-        }
-
-        if (this.state.brush) {
-            output.childrenProps["brushProps"] = {
-                dataKey: "date",
-                stroke: fields["stroke"]
-            };
         }
         output["complete"] = true;
         console.log("output: ", output);
