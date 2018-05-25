@@ -23,7 +23,7 @@ export default class MultiStyledSelectField extends Component {
             <MenuItem
                 key={item.key}
                 insetChildren={true}
-                checked={values && values.indexOf(item.key) > -1}
+                checked={values && values.indexOf(item) > -1}
                 value={item}
                 primaryText={item.value}
             />
@@ -31,9 +31,7 @@ export default class MultiStyledSelectField extends Component {
     };
 
     onChangeitem = (event, index, value) => {
-        console.log("event: ", event);
-        console.log("index: ", index);
-        console.log("value: ", value);
+        console.log("onChangeitem value: ", value);
         this.props.onChangeitem(value);
     };
 

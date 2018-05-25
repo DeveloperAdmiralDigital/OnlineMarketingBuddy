@@ -2,20 +2,22 @@ import React, {Component} from 'react';
 import swal from 'sweetalert2';
 import {Row} from 'react-materialize';
 import {Link} from 'react-router-dom';
-import DatePicker from 'material-ui/DatePicker';
 import Moment from 'moment';
-import Header from "../components/generalComponents/Header";
+import Loader from 'react-dots-loader'
+import Switch from '@material-ui/core/Switch';
+import DatePicker from 'material-ui/DatePicker';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import * as NameService from '../services/AdvertisementNameService';
 import * as GraphService from '../services/GraphService';
 import * as CampaignService from "../services/CapmaignService";
 import * as AdvertisementSetService from "../services/AdvertisementSetService";
+import Header from "../components/generalComponents/Header";
 import StyledDropDown from "../components/generalComponents/StyledDropDown";
 import StyledTextField from "../components/generalComponents/StyledTextField";
 import StyledColorPicker from "../components/generalComponents/StyledColorPicker";
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import 'react-select/dist/react-select.css';
 import MultiStyledSelectField from "../components/generalComponents/MultiStyledSelectField";
+import 'react-select/dist/react-select.css';
+import 'react-dots-loader/index.css'
 
 const GRAPH_TYPES = [
     {value: "line", key: 1},
@@ -48,6 +50,20 @@ const FB_TYPES = [
     {value: "inlineLinkClicks", key: 11},
     {value: "frequency", key: 12}
 ];
+const STROKE = [
+    "#960000",
+    "#ff0000",
+    "#009600",
+    "#00ff00",
+    "#000096",
+    "#0000ff",
+    "#320000",
+    "#c80000",
+    "#003200",
+    "#00c800",
+    "#000032",
+    "#0000c8",
+];
 
 export default class AddGraph extends Component {
     constructor(props) {
@@ -59,17 +75,17 @@ export default class AddGraph extends Component {
                 graphTitle: "",
                 graphType: "",
                 data: [],
-                dataKey: "",
+                dataKey: [],
                 stroke: "#960000",
                 advertisementId: null,
-                lineDataKey: "",
-                barDataKey: "",
+                lineDataKey: [],
+                barDataKey: [],
                 lineStroke: "#960000",
                 barStroke: "#960000",
                 beginDate: new Date(),
                 endDate: new Date()
             },
-            brush: false,
+            brush: true,
             errors: {},
             campaigns: [],
             selectedCampaign: "",
@@ -78,8 +94,7 @@ export default class AddGraph extends Component {
             advertisements: [],
             selectedAd: "",
             analytics: false,
-            facebook: false,
-            selected: {types: []}
+            facebook: false
         }
     }
 
@@ -107,12 +122,6 @@ export default class AddGraph extends Component {
         });
     }
 
-    handleChange(field, e) {
-        let fields = this.state.fields;
-        fields[field] = e.target.value;
-        this.setState({fields});
-    };
-
     handleFieldChange(field, value) {
         console.log("field: ", field, ", value: ", value);
         let fields = this.state.fields;
@@ -120,65 +129,52 @@ export default class AddGraph extends Component {
         this.setState({fields});
     }
 
-    handleDropChange(field, item) {
-        console.log("field: ", field, ", value: ", item);
-        let fields = this.state.fields;
-        fields[field] = item.value;
-        this.setState({fields});
+    handleDropChange(field,item){
+        this.handleFieldChange(field,item.value)
     }
+
+    handleChange(field, event) {
+        this.handleFieldChange(field, event.target.value);
+    };
 
     handleBrushChange(event) {
         console.log("field: brush, value: ", event.target.checked);
-
         this.setState({brush: event.target.checked});
     };
 
     handleDateChange(field, event, date) {
-        console.log("field: ", field, ", value: ", date);
-        let fields = this.state.fields;
-        fields[field] = date;
-        this.setState({fields});
-    };
-
-    handleMultiSelect = (field, item) => {
-        /*        let selected = this.state.selected;
-                if(selected["types"].includes(item[0])){
-                    selected["types"].splice(selected["types"].indexOf(item[0]),1);
-                } else {
-                    selected["types"].push(item[0]);
-                }
-                this.setState({
-                    selected:selected
-                });
-                console.log("this.state.selected: ", this.state.selected)*/
-        console.log("item: ", item)
-
+        this.handleFieldChange(field, date);
     };
 
     handleCampaignChange(value) {
         console.log("campaign change: ", value);
+        this.setState({selectedCampaign: value});
         CampaignService.getAdSets(value.key).then((adSets) => {
+            console.log("handleCampaignChange adsets: ", adSets);
             let adSetsIn = [];
             adSets.forEach((adSet) => {
-                if (adSet["advertisementName"] != null) {
-                    adSetsIn.push({key: adSet["advertisementSetId"], value: adSet["advertisementName"]})
-                } else {
-                    adSetsIn.push({key: adSet["advertisementSetId"], value: adSet["advertisementSetCode"]})
+                {
+                    adSetsIn = (adSet["advertisementName"] != null) ? this.pushArray(adSetsIn, {
+                            key: adSet["advertisementSetId"],
+                            value: adSet["advertisementName"]
+                        })
+                        : this.pushArray(adSetsIn, {
+                            key: adSet["advertisementSetId"],
+                            value: adSet["advertisementSetCode"]
+                        })
                 }
             });
-            console.log("adsets from campaign: ", value);
-            console.log("adveritsements: ", adSetsIn);
             this.setState({
-                selectedCampaign: value.value,
                 adSets: adSetsIn
             });
-            this.forceUpdate();
         });
-
     }
 
     handleAdSetChange(value) {
         console.log("handleAdSetChange: ", value);
+        this.setState({
+            selectedAdSet: value.value
+        });
         AdvertisementSetService.getAdName(value.key).then((ads) => {
             let adIn = [];
             ads.forEach((ad) => {
@@ -190,80 +186,60 @@ export default class AddGraph extends Component {
                     adIn.push({key: ad["advertisementNameId"], value: ad["advertisementNameCode"]})
                 }
             });
-            console.log("adveritsements from adset: ", value);
-            console.log("adveritsements: ", adIn);
             this.setState({
-                selectedAdSet: value.value,
                 advertisements: adIn
             });
-            this.forceUpdate();
         });
     }
 
     handleAdChange(value) {
         console.log("handleAdChange: ", value);
+        this.setState({
+            selectedAd: value.value
+        });
         NameService.getById(value.key).then((data) => {
-            console.log("NameService.getById: ", data);
             let fields = this.state.fields;
             fields["advertisementId"] = data["advertisementNameId"];
             this.setState({
-                selectedAd: value.value,
                 fields: fields,
                 analytics: data["containsAnalytics"],
                 facebook: !data["containsAnalytics"]
             });
-
-            this.forceUpdate();
         });
     }
 
     handleAdd = () => {
-        console.log("handleAdd: ", this.state);
+        console.log("handleAdd: ", this.state.fields);
         let fields = this.state.fields;
         let output = this.setOutput(fields);
+        console.log(this.state.brush);
         if (this.state.brush) {
             output.childrenProps["brushProps"] = {
                 dataKey: "date",
                 stroke: fields["stroke"]
             };
         }
-
+        console.log("brush: ", output.childrenProps["brushProps"]);
         if (!output["complete"]) {
             swal({
-                position: 'center',
                 type: 'error',
                 title: 'fill in all fields',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 1000
             });
         } else {
-            let data = {
-                beginDate: Moment(fields.beginDate).format('DD-MM-YYYY'),
-                endDate: Moment(fields.endDate).format('DD-MM-YYYY')
+            let date = {
+                beginDate: this.momentDate(fields.beginDate),
+                endDate: this.momentDate(fields.endDate)
             };
-            NameService.getDetails(fields["advertisementId"], JSON.stringify(data))
+            NameService.getDetails(fields["advertisementId"], JSON.stringify(date))
                 .then((data) => {
                     console.log("NameService.getDetails data: ", data);
-                    if (data['analyticsAdvertisements'].length >= 1) {
-                        console.log("analytics");
-                        let analytics = data["analyticsAdvertisements"];
-                        analytics.forEach((dat) => {
-                            dat["date"] = dat.adDate.dayOfMonth + "-" + dat.adDate.monthOfYear + "-" + dat.adDate.yearOfEra;
-                        });
-                        let fields = this.state.fields;
-                        fields["data"] = analytics;
-                        this.setState({fields});
-                    } else if (data['facebookAdvertisements'].length >= 1) {
-                        console.log("facebook");
-                        let facebook = data["facebookAdvertisements"];
-                        facebook.forEach((dat) => {
-                            dat["date"] = dat.adDate.dayOfMonth + "-" + dat.adDate.monthOfYear + "-" + dat.adDate.yearOfEra;
-                        });
-                        let fields = this.state.fields;
-                        fields["data"] = facebook;
-                        this.setState({fields});
-                    } else {
-                        console.log("no data");
+                    if("analyticsAdvertisements" in data){
+                        if (data['analyticsAdvertisements'].length >= 1 || data['facebookAdvertisements'].length >= 1) {
+                            let arrayData = (data['analyticsAdvertisements'].length >= 1) ? data["analyticsAdvertisements"] : data["facebookAdvertisements"];
+                            this.arraySetDate(arrayData);
+                        }
                     }
                 })
                 .then(() => {
@@ -291,27 +267,12 @@ export default class AddGraph extends Component {
 
     };
 
-
     render() {
         let datakeys = null;
-        let composedStroke = null;
-        if (this.state.fields["graphType"] === "composed") {
-            composedStroke =
-                <Row>
-                    <div className="col s12 m6 l6">
-                        <StyledColorPicker name='lineStroke' label="lineStroke"
-                                           handleChange={this.handleFieldChange.bind(this, "lineStroke")}/>
-                    </div>
-                    <div className="col s12 m6 l6">
-                        <StyledColorPicker name='barStroke' label="barStroke"
-                                           handleChange={this.handleFieldChange.bind(this, "barStroke")}/>
-                    </div>
-                </Row>;
-        }
         let campaignSelect =
             <div className="col s12 m6 l4">
                 <label>campaigns: </label>
-                <p>Loading campaigns...</p>
+                <Loader/>
             </div>;
         let adSetSelect =
             <div className="col s12 m6 l4">
@@ -333,7 +294,6 @@ export default class AddGraph extends Component {
                                     label="Local Campaigns: "/>
                 </div>;
         }
-
         if (this.state.campaigns.length >= 1) {
             campaignSelect =
                 <div className="col s12 m6 l4">
@@ -343,75 +303,47 @@ export default class AddGraph extends Component {
                                     label="Campaigns: "/>
                 </div>;
         }
+
+        if (this.state.selectedCampaign !== "" && this.state.adSets.length === 0) {
+            adSetSelect =
+                <div className="col s12 m6 l4" id={`adSets-${this.state.selectedCampaign}`}>
+                    <label>AdvertisementSet: </label>
+                    <Loader size={7} distance={7} />
+                </div>;
+        }
         if (this.state.adSets.length >= 1) {
             adSetSelect =
-                <div className="col s12 m6 l4">
+                <div className="col s12 m6 l4" id={`adSets-${this.state.selectedCampaign}`}>
                     <StyledDropDown items={this.state.adSets}
                                     floatingLabelText="AdSets"
                                     handleChange={this.handleAdSetChange.bind(this)}
-                                    label="AdvertisementSet: "
-                                    key={`adSets-${this.state.selectedCampaign}`}/>
+                                    label="AdvertisementSet: "/>
+                </div>;
+        }
+
+        if (this.state.selectedAdSet !== "" && this.state.advertisements.length === 0) {
+            adSelect =
+                <div className="col s12 m6 l4" id={`adSets-${this.state.selectedAdSet}`}>
+                    <label>Advertisement: </label>
+                    <Loader size={7} distance={7}/>
                 </div>;
         }
         if (this.state.advertisements.length >= 1) {
             adSelect =
-                <div className="col s12 m6 l4">
+                <div className="col s12 m6 l4" id={`ad-${this.state.selectedAdSet}`}>
                     <StyledDropDown items={this.state.advertisements}
                                     floatingLabelText="Advertisements"
                                     handleChange={this.handleAdChange.bind(this)}
-                                    label="Advertisement: "
-                                    key={`ad-${this.state.selectedAdSet}`}/>
+                                    label="Advertisement: "/>
                 </div>;
         }
 
         if (this.state.facebook) {
-            if ("composed" !== this.state.fields["graphType"]) {
-                datakeys = <Row>
-                    <StyledDropDown items={FB_TYPES} floatingLabelText="dataKey"
-                                    handleChange={this.handleDropChange.bind(this, "dataKey")}
-                                    label="dataKey"/>
-                </Row>;
-            } else {
-                datakeys =
-                    <Row>
-                        <div className="col s12 m6 l6">
-                            <StyledDropDown items={FB_TYPES} floatingLabelText="lineDataKey"
-                                            handleChange={this.handleDropChange.bind(this, "lineDataKey")}
-                                            label="DataKey Line"/>
-                        </div>
-                        <div className="col s12 m6 l6">
-                            <StyledDropDown items={FB_TYPES} floatingLabelText="barDataKey"
-                                            handleChange={this.handleDropChange.bind(this, "barDataKey")}
-                                            label="DataKey bar"/>
-                        </div>
-                    </Row>;
-            }
+            datakeys = this.setDataKeys(FB_TYPES);
         }
         if (this.state.analytics) {
-            if ("composed" !== this.state.fields["graphType"]) {
-                datakeys = <Row>
-                    <StyledDropDown items={A_TYPES} floatingLabelText="dataKey"
-                                    handleChange={this.handleDropChange.bind(this, "dataKey")}
-                                    label="dataKey"/>
-                </Row>;
-            } else {
-                datakeys =
-                    <Row>
-                        <div className="col s12 m6 l6">
-                            <StyledDropDown items={A_TYPES} floatingLabelText="lineDataKey"
-                                            handleChange={this.handleDropChange.bind(this, "lineDataKey")}
-                                            label="DataKey Line"/>
-                        </div>
-                        <div className="col s12 m6 l6">
-                            <StyledDropDown items={A_TYPES} floatingLabelText="barDataKey"
-                                            handleChange={this.handleDropChange.bind(this, "barDataKey")}
-                                            label="DataKey bar"/>
-                        </div>
-                    </Row>;
-            }
+            datakeys = this.setDataKeys(A_TYPES);
         }
-
-
         return (
             <div className="Homepage">
                 <Header name="Add Graph"/>
@@ -442,58 +374,39 @@ export default class AddGraph extends Component {
                                                                        handleChange={this.handleFieldChange.bind(this, "stroke")}/>
                                                 </div>
                                             </Row>
-                                            {composedStroke}
-                                        </div>
-                                    </div>
-                                    <div className="section">
-                                        <Row>
-                                            <div className="col s12 m6 l6">
-                                                <DatePicker textFieldStyle={{width: '100%', hintStyle: '#000000'}}
-                                                            hintText="Begin Date for data" mode="landscape"
-                                                            container="inline" value={this.state.fields["beginDate"]}
-                                                            onChange={this.handleDateChange.bind(this, "beginDate")}/>
-                                            </div>
-                                            <div className="col s12 m6 l6">
-                                                <DatePicker textFieldStyle={{width: '100%', hintStyle: '#000000'}}
-                                                            hintText="End Date for data" mode="landscape"
-                                                            container="inline" value={this.state.fields["endDate"]}
-                                                            onChange={this.handleDateChange.bind(this, "endDate")}/>
-                                            </div>
-                                        </Row>
-                                        <Row>
-                                            <div className="col s12 m6 l6">
-                                                <FormControlLabel
-                                                    control={<Switch checked={this.state.brush}
-                                                                     onChange={this.handleBrushChange.bind(this)}
-                                                                     value="brush"
-                                                                     color="default"/>}
-                                                    label="Brush"/>
-                                            </div>
-                                        </Row>
-                                        <div className="col s12 m12 l12">
-                                            {/*<Row>
-                                                <StyledTextField ref="advertisementId" required
-                                                                 onChange={this.handleChange.bind(this, "advertisementId")}
-                                                                 placeholder="Fill in a advertisement Id for the graph..."
-                                                                 label="AdvertisementId"/>
-                                            </Row>*/}
+                                            <Row>
+                                                <div className="col s12 m6 l6">
+                                                    <DatePicker textFieldStyle={{width: '100%', hintStyle: '#000000'}}
+                                                                hintText="Begin Date for data" mode="landscape"
+                                                                container="inline"
+                                                                value={this.state.fields["beginDate"]}
+                                                                onChange={this.handleDateChange.bind(this, "beginDate")}/>
+                                                </div>
+                                                <div className="col s12 m6 l6">
+                                                    <DatePicker textFieldStyle={{width: '100%', hintStyle: '#000000'}}
+                                                                hintText="End Date for data" mode="landscape"
+                                                                container="inline" value={this.state.fields["endDate"]}
+                                                                onChange={this.handleDateChange.bind(this, "endDate")}/>
+                                                </div>
+                                            </Row>
+                                            <Row>
+                                                <div className="col s12 m6 l6">
+                                                    <FormControlLabel
+                                                        control={<Switch checked={this.state.brush}
+                                                                         onChange={this.handleBrushChange.bind(this)}
+                                                                         value="brush"
+                                                                         color="primary"/>}
+                                                        label="Brush"/>
+                                                </div>
+                                            </Row>
                                             <Row>
                                                 {campaignSelect}
                                                 {adSetSelect}
                                                 {adSelect}
                                             </Row>
-                                        </div>
-                                        <div className="col s12 m12 l12">
-                                            {datakeys}
-                                        </div>
-                                        <div className="col s12 m12 l12">
-                                            <MultiStyledSelectField
-                                                label="MultiSelect"
-                                                fullWidth={true}
-                                                items={A_TYPES}
-                                                itemValues={this.state.selected["types"]}
-                                                onChangeitem={this.handleMultiSelect.bind(this, "types")}
-                                            />
+                                            <Row>
+                                                {datakeys}
+                                            </Row>
                                         </div>
                                     </div>
                                     <div className="section">
@@ -517,7 +430,7 @@ export default class AddGraph extends Component {
     }
 
     setOutput(fields) {
-        let output = {graphTitle: fields["graphTitle"], childrenProps: []};
+        let output = {graphTitle: fields["graphTitle"], childrenProps: [], drawProps: []};
         if (fields["graphType"] !== "" && fields["advertisementId"] !== null) {
             output["graphType"] = fields["graphType"];
         } else {
@@ -525,36 +438,55 @@ export default class AddGraph extends Component {
         }
 
         if (fields["graphType"] === "composed") {
-            if (fields["lineDataKey"] !== "" && fields["barDataKey"] !== "" && fields["barStroke"] !== "" && fields["lineStroke"] !== "") {
-                output.childrenProps["yAxisProps"] = [
-                    {
-                        yAxisId: "line",
-                        hide: false,
-                        dataKey: fields["lineDataKey"],
-                        orientation: "Left",
-                    },
-                    {
-                        yAxisId: "bar",
-                        hide: false,
-                        dataKey: fields["barDataKey"],
-                        orientation: "Right",
-
-                    }
-                ];
-                output.drawProps = [
-                    {
+            if (fields["lineDataKey"].length >= 1 && fields["barDataKey"].length >= 1 && fields["barStroke"] !== "" && fields["lineStroke"] !== "") {
+                let i = 0;
+                fields["lineDataKey"].forEach((dataKey) => {
+                    output.drawProps.push({
                         graph: "line",
                         type: 'linear',
-                        dataKey: fields["lineDataKey"],
-                        stroke: fields["lineStroke"],
-                    },
-                    {
+                        dataKey: dataKey.value,
+                        stroke: STROKE[i],
+                    });
+                    i++
+                });
+                i = 11;
+                fields["barDataKey"].forEach((dataKey) => {
+                    output.drawProps.push({
                         graph: "bar",
-                        dataKey: fields["barDataKey"],
-                        stroke: fields["barStroke"],
-                    }
+                        dataKey: dataKey.value,
+                        stroke: STROKE[i],
+                    });
+                    i++
+                });
+                output.childrenProps["yAxisProps"] =
+                    [{
+                        yAxisId: "line",
+                        hide: false,
+                        orientation: "Left",
+                    }, {
+                        yAxisId: "bar",
+                        hide: false,
+                        orientation: "Right",
+                    }];
 
-                ];
+                /*                if(fields["lineDataKey"].length === 1){
+                                    output.childrenProps.yAxisProps[0] =
+                                        {
+                                            yAxisId: "line",
+                                            hide: false,
+                                            dataKey: fields.lineDataKey[0].value,
+                                            orientation: "Left",
+                                        };
+                                }
+                                if(fields["barDataKey"].length === 1){
+                                    output.childrenProps.yAxisProps[1] =
+                                        {
+                                            yAxisId: "bar",
+                                            hide:false,
+                                            dataKey: fields.barDataKey[0].value,
+                                            orientation: "Right",
+                                        };
+                                }*/
             } else {
                 return {complete: false};
             }
@@ -563,15 +495,17 @@ export default class AddGraph extends Component {
                 output.childrenProps["yAxisProps"] = [
                     {
                         hide: false,
-                        dataKey: fields["dataKey"]
+                        // dataKey: fields.dataKey[0].value
                     }
                 ];
-                output["drawProps"] = [
-                    {
-                        dataKey: fields["dataKey"],
-                        stroke: fields["stroke"],
-                    }
-                ];
+                let i = STROKE.length - 1;
+                fields["dataKey"].forEach((dataKey) => {
+                    output.drawProps.push({
+                        dataKey: dataKey.value,
+                        stroke: STROKE[i],
+                    });
+                    i--;
+                });
             } else {
                 return {complete: false};
             }
@@ -579,5 +513,62 @@ export default class AddGraph extends Component {
         output["complete"] = true;
         console.log("output: ", output);
         return output;
+    }
+
+    pushArray(array, value) {
+        array.push(value);
+        return array;
+    }
+
+    momentDate(date) {
+        return Moment(date).format('DD-MM-YYYY');
+    }
+
+    arraySetDate(array) {
+        array.forEach((dat) => {
+            dat["date"] = dat.adDate.dayOfMonth + "-" + dat.adDate.monthOfYear + "-" + dat.adDate.yearOfEra;
+        });
+        let fields = this.state.fields;
+        fields["data"] = array;
+        this.setState({fields});
+    }
+
+    setDataKeys(array) {
+        let datakeys = null;
+        if ("composed" !== this.state.fields["graphType"]) {
+            datakeys =
+                <div className="col s12 m12 l12">
+                    <MultiStyledSelectField
+                        label="DataKey"
+                        fullWidth={false}
+                        items={array}
+                        itemValues={this.state.fields["dataKey"]}
+                        onChangeitem={this.handleFieldChange.bind(this, "dataKey")}
+                    />
+                </div>;
+        } else {
+            datakeys =
+                <div className="col s12 m12 l12">
+                    <div className="col s12 m6 l6">
+                        <MultiStyledSelectField
+                            label="DataKey Line"
+                            fullWidth={false}
+                            items={array}
+                            itemValues={this.state.fields["lineDataKey"]}
+                            onChangeitem={this.handleFieldChange.bind(this, "lineDataKey")}
+                        />
+                    </div>
+                    <div className="col s12 m6 l6">
+                        <MultiStyledSelectField
+                            label="DataKey bar"
+                            fullWidth={false}
+                            items={array}
+                            itemValues={this.state.fields["barDataKey"]}
+                            onChangeitem={this.handleFieldChange.bind(this, "barDataKey")}
+                        />
+                    </div>
+                </div>;
+        }
+        return datakeys;
     }
 }

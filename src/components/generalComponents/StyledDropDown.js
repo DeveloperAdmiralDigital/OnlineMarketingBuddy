@@ -22,11 +22,10 @@ export default class StyledDropDown extends Component {
         }
     }
 
-    handleChange = (event, index, value) => {
-        this.setState({value}, () => {
-            this.props.handleChange(value);
+    handleChange = (event, index, item) => {
+        this.setState({value: item}, () => {
+            this.props.handleChange(item);
         });
-
     };
 
     componentWillMount() {
@@ -47,12 +46,10 @@ export default class StyledDropDown extends Component {
                     selectedMenuItemStyle={styles.color}
                     floatingLabelFocusStyle={styles.color}
                     underlineFocusStyle={styles.underlineStyle}
-                    underlineStyle={styles.underlineStyle}
-                >
+                    underlineStyle={styles.underlineStyle}>
                     {this.state.selectItems}
                 </SelectField>
             </div>
-
         )
     }
 }
