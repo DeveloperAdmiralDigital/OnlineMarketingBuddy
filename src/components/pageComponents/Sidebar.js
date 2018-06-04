@@ -7,6 +7,7 @@ import logo from '../../images/admiral-digital-logo-white-medium.png'
 // import * as LoginService from "../../services/LoginService";
 // import * as roleService from "../../services/UserService";
 import './Sidebar.css';
+import AddDataSource from "../../containers/AddDataSource";
 
 const styles = {
     menuColor: {
@@ -62,12 +63,17 @@ export default class Sidebar extends Component {
                         <Link to="/">
                             <MenuItem style={styles.menuColor} primaryText={'Home'}/>
                         </Link>
+                        <Divider/>
                         <Link to="/dashboard">
                             <MenuItem style={styles.menuColor} primaryText={'Dashboard'}/>
                         </Link>
                         <Link to="/addGraph">
                             <MenuItem style={styles.menuColor} primaryText={'AddGraph'}/>
                         </Link>
+                        <Link to="/AddDatasource">
+                            <MenuItem style={styles.menuColor} primaryText={'AddDataSource'}/>
+                        </Link>
+
                     </section>
                 </Menu>
             </div>

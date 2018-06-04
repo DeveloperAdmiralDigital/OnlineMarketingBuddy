@@ -6,7 +6,10 @@ const CHART_HEIGHT = 250;
 const CHART_WIDTH = 600;
 const CHART_LAYOUT = 'horizontal';
 const CHART_MARGIN = {top: 5, right: 10, left: 10, bottom: 10};
-
+/**
+ * Component to set Layout, dimensions for graphs
+ *
+ **/
 
 export default class graphComponent extends Component {
     constructor(props) {

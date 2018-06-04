@@ -25,7 +25,6 @@ export default function (WrapperComponent) {
                         }
                     });
             }
-            ;
             this.CheckUserRoles();
         }
 

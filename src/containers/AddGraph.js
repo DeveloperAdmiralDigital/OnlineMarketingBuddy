@@ -3,7 +3,7 @@ import swal from 'sweetalert2';
 import {Row} from 'react-materialize';
 import {Link} from 'react-router-dom';
 import Moment from 'moment';
-import Loader from 'react-dots-loader'
+import Loader from 'react-dots-loader';
 import Switch from '@material-ui/core/Switch';
 import DatePicker from 'material-ui/DatePicker';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -17,7 +17,8 @@ import StyledTextField from "../components/generalComponents/StyledTextField";
 import StyledColorPicker from "../components/generalComponents/StyledColorPicker";
 import MultiStyledSelectField from "../components/generalComponents/MultiStyledSelectField";
 import 'react-select/dist/react-select.css';
-import 'react-dots-loader/index.css'
+import 'react-dots-loader/index.css';
+import './AddGraph.css';
 
 const GRAPH_TYPES = [
     {value: "line", key: 1},
@@ -129,8 +130,8 @@ export default class AddGraph extends Component {
         this.setState({fields});
     }
 
-    handleDropChange(field,item){
-        this.handleFieldChange(field,item.value)
+    handleDropChange(field, item) {
+        this.handleFieldChange(field, item.value)
     }
 
     handleChange(field, event) {
@@ -235,7 +236,7 @@ export default class AddGraph extends Component {
             NameService.getDetails(fields["advertisementId"], JSON.stringify(date))
                 .then((data) => {
                     console.log("NameService.getDetails data: ", data);
-                    if("analyticsAdvertisements" in data){
+                    if ("analyticsAdvertisements" in data) {
                         if (data['analyticsAdvertisements'].length >= 1 || data['facebookAdvertisements'].length >= 1) {
                             let arrayData = (data['analyticsAdvertisements'].length >= 1) ? data["analyticsAdvertisements"] : data["facebookAdvertisements"];
                             this.arraySetDate(arrayData);
@@ -272,7 +273,7 @@ export default class AddGraph extends Component {
         let campaignSelect =
             <div className="col s12 m6 l4">
                 <label>campaigns: </label>
-                <Loader/>
+                <Loader size={7} distance={7}/>
             </div>;
         let adSetSelect =
             <div className="col s12 m6 l4">
@@ -308,7 +309,7 @@ export default class AddGraph extends Component {
             adSetSelect =
                 <div className="col s12 m6 l4" id={`adSets-${this.state.selectedCampaign}`}>
                     <label>AdvertisementSet: </label>
-                    <Loader size={7} distance={7} />
+                    <Loader size={7} distance={7}/>
                 </div>;
         }
         if (this.state.adSets.length >= 1) {

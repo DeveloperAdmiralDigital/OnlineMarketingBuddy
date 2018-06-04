@@ -7,6 +7,7 @@ import check from './components/checkingComponents/CheckTokenComponent';
 import Home from './containers/Home';
 import Dashboard from './containers/Dashboard';
 import AddGraph from './containers/AddGraph';
+import AddDataSource from './containers/AddDataSource';
 
 import AddUser from "./components/userComponents/AddUser";
 import UserDetails from "./components/userComponents/UserUpdate";
@@ -31,6 +32,8 @@ export default class App extends Component {
                 <Route name="dashboard" path="/Dashboard" component={check(Dashboard)}/>
 
                 <Route name="addGraph" path="/addGraph" component={check(AddGraph)}/>
+
+                <Route name="AddDatasource" path="/AddDatasource" component={check(AddDataSource)}/>
 
                 <Route path='*' exact={true} component={NotFound}/>
             </Switch>
