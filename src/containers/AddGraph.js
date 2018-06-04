@@ -345,6 +345,7 @@ export default class AddGraph extends Component {
         if (this.state.analytics) {
             datakeys = this.setDataKeys(A_TYPES);
         }
+
         return (
             <div className="Homepage">
                 <Header name="Add Graph"/>
@@ -416,7 +417,7 @@ export default class AddGraph extends Component {
                                                    className="btn waves-effect waves-light red accent-4 buttonstyle"
                                                    value="Add Graph"/>
                                             <Link to="/dashboard" type="button"
-                                                  className="btn waves-effect waves-light  red buttonstyle">Terug</Link>
+                                                  className="btn waves-effect waves-light  red buttonstyle"> Back </Link>
                                         </div>
                                     </div>
                                 </form>

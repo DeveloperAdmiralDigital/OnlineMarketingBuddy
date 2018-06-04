@@ -17,20 +17,20 @@ export default class AddDataSource extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            analyticsAccounts:[],
-            analyticsProperties:[],
-            analyticsProfiles:[],
-            fields:{
-                account:"",
-                property:"",
-                profiles:[],
+            analyticsAccounts: [],
+            analyticsProperties: [],
+            analyticsProfiles: [],
+            fields: {
+                account: "",
+                property: "",
+                profiles: [],
             }
         }
     }
 
     componentWillMount() {
         AnalyticsAccountService.getAll().then((accounts) => {
-            console.log("accounts mount: ",accounts);
+            console.log("accounts mount: ", accounts);
             let accountsIn = [];
             accounts.forEach((account) => {
                 accountsIn.push({key: account["analyticsAccountCode"], value: account["analyticsAccountName"]});
@@ -48,7 +48,7 @@ export default class AddDataSource extends Component {
             console.log("handleAccountChange properties: ", properties);
             let propertiesIn = [];
             properties.forEach((property) => {
-                    propertiesIn.push({key: property["analyticsPropertyCode"], value: property["analyticsPropertyName"]});
+                propertiesIn.push({key: property["analyticsPropertyCode"], value: property["analyticsPropertyName"]});
             });
             this.setState({
                 analyticsProperties: propertiesIn
@@ -62,7 +62,7 @@ export default class AddDataSource extends Component {
         let fields = this.state.fields;
         fields["property"] = item;
         this.setState({fields});
-        AnalyticsProfileService.getAll(this.state.fields.account.key,item.key).then((profiles) => {
+        AnalyticsProfileService.getAll(this.state.fields.account.key, item.key).then((profiles) => {
             console.log("handlePropertyChange profiles: ", profiles);
             let profilesIn = [];
             profiles.forEach((profile) => {
@@ -82,17 +82,59 @@ export default class AddDataSource extends Component {
         this.setState({fields});
     }
 
-    handleAdd(){
-        console.log("fields.account: ", this.state.fields.account );
-        console.log("fields.property: ", this.state.fields.property );
-        console.log("fields.profiles: ", this.state.fields.profiles );
-    }
+    handleAdd = () => {
+        let fields = this.state.fields;
+        console.log("handle add");
+        console.log("fields.account: ", this.state.fields.account);
+        console.log("fields.property: ", this.state.fields.property);
+        console.log("fields.profiles: ", this.state.fields.profiles);
+        if (fields["account"] !== "" && fields["property"] !== "" && fields["profiles"].length >= 1) {
+            AnalyticsAccountService.postData(JSON.stringify({
+                analyticsAccountCode: fields["account"].key,
+                analyticsAccountName: fields["account"].value
+            }));
+            AnalyticsPropertyService.postData(fields["account"].key, JSON.stringify({
+                analyticsPropertyCode: fields["property"].key,
+                analyticsPropertyName: fields["property"].value
+            }));
+            fields["profiles"].forEach((profile) => {
+                AnalyticsProfileService.postData(fields["property"].key, JSON.stringify({
+                    analyticsProfileCode: profile.key,
+                    analyticsProfileName: profile.value
+                }));
+            });
+            swal({
+                position: 'center',
+                type: 'success',
+                title: 'Data source Added!!',
+                showConfirmButton: false,
+                timer: 2500
+            }).then(this.setState({
+                    analyticsProperties: [],
+                    analyticsProfiles: [],
+                    fields: {
+                        account: "",
+                        property: "",
+                        profiles: [],
+                    }
+                })
+            );
+        } else {
+            swal({
+                type: 'error',
+                title: 'Select all values',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+
+    };
 
     render() {
         let accounts =
             <div className="col s12 m12 l6">
                 <label>Analytics accounts:</label>
-                <Loader size={7} distance={7} />
+                <Loader size={7} distance={7}/>
             </div>;
         let properties =
             <div className="col s12 m12 l6">
@@ -118,7 +160,7 @@ export default class AddDataSource extends Component {
             properties =
                 <div className="col s12 m12 l6" id={"propertiesLoading"}>
                     <label>Analytics properties: </label>
-                    <Loader size={7} distance={7} />
+                    <Loader size={7} distance={7}/>
                 </div>;
         }
         if (this.state.analyticsProperties.length >= 1) {
@@ -150,7 +192,6 @@ export default class AddDataSource extends Component {
                 </div>;
         }
 
-
         return (
             <div className="Homepage">
                 <Header name="Add Datasources"/>
@@ -160,7 +201,7 @@ export default class AddDataSource extends Component {
                             <div className="card-content">
                                 <form className="addDatasource" action="/" method="POST" onSubmit={(e) => {
                                     e.preventDefault();
-                                    this.handleAdd;
+                                    this.handleAdd();
                                 }}>
                                     <div className="section">
                                         <div className="col s12 m12 l12">
@@ -177,11 +218,13 @@ export default class AddDataSource extends Component {
                                     </div>
                                     <div className="section">
                                         <div className="col s12 m12 l12 center">
-                                            <input type="submit"
-                                                   className="btn waves-effect waves-light red accent-4 buttonstyle"
-                                                   value="Add Datasources"/>
-                                            <Link to="/" type="button"
-                                                  className="btn waves-effect waves-light  red buttonstyle">Terug</Link>
+                                            <Row>
+                                                <input type="submit"
+                                                       className="btn waves-effect waves-light red accent-4 buttonstyle"
+                                                       value="Add Datasources"/>
+                                                <Link to="/" type="button"
+                                                      className="btn waves-effect waves-light  red buttonstyle"> Back </Link>
+                                            </Row>
                                         </div>
                                     </div>
                                 </form>
