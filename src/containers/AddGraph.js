@@ -500,13 +500,13 @@ export default class AddGraph extends Component {
                         // dataKey: fields.dataKey[0].value
                     }
                 ];
-                let i = STROKE.length - 1;
+                let i = 0;
                 fields["dataKey"].forEach((dataKey) => {
                     output.drawProps.push({
                         dataKey: dataKey.value,
                         stroke: STROKE[i],
                     });
-                    i--;
+                    i++;
                 });
             } else {
                 return {complete: false};
